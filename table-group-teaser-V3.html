@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Table Group × Salesforce — Ahead of Next Week's Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #faf8f4;
+    --paper-dim: #f2efe8;
+    --navy: #1c2740;
+    --navy-soft: #3a4560;
+    --muted: #6b7280;
+    --red: #b91c2b;
+    --red-soft: #d4495a;
+    --border: #e2ddd1;
+    --white: #ffffff;
+    --radius: 10px;
+    --shadow: 0 4px 18px -6px rgba(28, 39, 64, 0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--navy);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  .accent-bar { height: 4px; background: linear-gradient(90deg, var(--red), var(--red-soft)); }
+
+  h1, h2, h3 {
+    font-family: 'Newsreader', Georgia, serif;
+    font-weight: 500;
+    color: var(--navy);
+    line-height: 1.14;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  a { color: var(--red); text-decoration: none; }
+
+  .eyebrow {
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 14px;
+    height: 2px;
+    background: var(--red);
+    display: inline-block;
+  }
+
+  /* Header */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 244, 0.94);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+
+  .wordmark {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: 'Newsreader', serif;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .wordmark .plus { color: var(--red); font-weight: 700; }
+  .wordmark .x { color: var(--muted); font-size: 15px; font-weight: 400; margin: 0 2px; }
+
+  nav { display: flex; gap: 30px; }
+
+  nav a {
+    color: var(--navy-soft);
+    font-size: 13.5px;
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 3px;
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transition: transform 0.18s ease;
+  }
+
+  nav a:hover { color: var(--navy); }
+  nav a:hover::after { transform: scaleX(1); }
+
+  /* Hero */
+  .hero { padding: 84px 0 60px; border-bottom: 1px solid var(--border); }
+
+  .hero h1 { font-size: 44px; max-width: 780px; margin-bottom: 22px; }
+
+  .hero .sub { font-size: 18px; color: var(--navy-soft); max-width: 620px; margin-bottom: 36px; }
+
+  .btn-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 56px; }
+
+  .btn {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 999px;
+    font-size: 14.5px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+
+  .btn-primary { background: var(--red); color: var(--white); box-shadow: 0 6px 16px -4px rgba(185, 28, 43, 0.45); }
+  .btn-primary:hover { background: #9e1826; transform: translateY(-1px); }
+
+  .btn-secondary { border: 1px solid var(--navy); color: var(--navy); }
+  .btn-secondary:hover { background: var(--navy); color: var(--white); transform: translateY(-1px); }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  @media (min-width: 700px) {
+    .stat-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .stat { background: var(--white); padding: 24px 22px; }
+
+  .stat .num {
+    font-family: 'Newsreader', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--red);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .stat .label { font-size: 13px; color: var(--muted); line-height: 1.45; }
+
+  /* Opportunity band */
+  .opp-band {
+    background: var(--navy);
+    padding: 72px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .opp-band::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 340px; height: 340px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .opp-band .eyebrow { color: #e79aa2; }
+  .opp-band .eyebrow::before { background: #e79aa2; }
+
+  .opp-band h2 { color: var(--white); font-size: 27px; max-width: 700px; margin-bottom: 40px; }
+
+  .opp-compare {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .opp-figure { display: flex; flex-direction: column; }
+
+  .opp-figure .n {
+    font-family: 'Newsreader', serif;
+    font-weight: 600;
+    line-height: 1;
+    font-size: 84px;
+  }
+
+  .opp-figure.one .n { color: var(--red-soft); }
+  .opp-figure.four .n { color: rgba(255,255,255,0.92); }
+
+  .opp-figure .cap {
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.55);
+    max-width: 190px;
+    margin-top: 6px;
+    line-height: 1.45;
+  }
+
+  .opp-divider {
+    width: 1px;
+    height: 70px;
+    background: rgba(255,255,255,0.18);
+  }
+
+  .opp-body { color: rgba(255,255,255,0.78); font-size: 15.5px; max-width: 620px; }
+
+  /* Generic section */
+  section.block { padding: 84px 0; border-bottom: 1px solid var(--border); }
+
+  .section-head { max-width: 660px; margin-bottom: 44px; }
+  .section-head h2 { font-size: 30px; }
+  .section-head .sub { color: var(--muted); font-size: 16px; margin-top: 12px; }
+
+  /* Cards */
+  .card-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+  @media (min-width: 780px) {
+    .card-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+
+  .card .num-tag {
+    font-family: 'Newsreader', serif;
+    font-size: 15px;
+    color: var(--red);
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .card h3 { font-size: 19px; margin-bottom: 10px; }
+  .card p { font-size: 14.5px; color: var(--navy-soft); }
+
+  /* Two lanes */
+  .lanes-grid { display: grid; grid-template-columns: 1fr; gap: 18px; margin-bottom: 24px; }
+
+  @media (min-width: 700px) {
+    .lanes-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .lane-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  .lane-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+
+  .lane-tag {
+    display: inline-block;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--red);
+    border: 1px solid var(--red-soft);
+    border-radius: 3px;
+    padding: 3px 8px;
+    margin-bottom: 14px;
+  }
+
+  .lane-card h3 { font-size: 18px; margin-bottom: 6px; }
+  .lane-owner { font-size: 13px; color: var(--muted); margin-bottom: 10px; font-style: italic; }
+  .lane-card p.desc { font-size: 14.5px; color: var(--navy-soft); }
+
+  .lane-why {
+    background: var(--paper-dim);
+    border-left: 3px solid var(--red);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 22px 26px;
+    font-size: 14.5px;
+    color: var(--navy-soft);
+    max-width: 760px;
+  }
+
+  .lane-why strong { color: var(--navy); }
+
+  /* Where it breaks */
+  .breaks-body { max-width: 700px; font-size: 16px; color: var(--navy-soft); margin-bottom: 40px; }
+  .breaks-body p { margin-bottom: 16px; }
+
+  .flow {
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 36px 30px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  @media (min-width: 780px) {
+    .flow { flex-direction: row; align-items: stretch; }
+  }
+
+  .flow-box {
+    flex: 1;
+    padding: 20px 18px;
+    background: var(--paper-dim);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--navy);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+  }
+
+  .flow-box strong { display: block; font-size: 14.5px; margin-bottom: 4px; }
+
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    color: var(--red-soft);
+    font-size: 22px;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+
+  @media (min-width: 780px) {
+    .flow-arrow { flex-direction: column; padding: 0 10px; }
+  }
+
+  .flow-box.broken {
+    border: 1.5px dashed var(--red-soft);
+    background: #fdf1f2;
+  }
+
+  .flow-box.broken strong { color: var(--red); }
+
+  .flow-box.broken .q-badge {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Newsreader', serif;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px -2px rgba(185,28,43,0.5);
+  }
+
+  .flow-caption { font-size: 13.5px; color: var(--muted); max-width: 700px; }
+
+  /* Steps */
+  .steps { display: flex; flex-direction: column; gap: 18px; }
+
+  .step {
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  .step:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+  .step-num {
+    font-family: 'Newsreader', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--red);
+    min-width: 40px;
+  }
+
+  .step h3 { font-size: 18.5px; margin-bottom: 6px; }
+  .step p { font-size: 14.5px; color: var(--navy-soft); }
+
+  .note-aside {
+    margin-top: 28px;
+    padding: 16px 20px;
+    border-left: 3px solid var(--border);
+    font-size: 13.5px;
+    color: var(--muted);
+    max-width: 680px;
+  }
+
+  /* Next week / demo */
+  .wed-body { max-width: 680px; font-size: 16px; color: var(--navy-soft); margin-bottom: 40px; }
+
+  .agenda { display: flex; flex-direction: column; }
+
+  .agenda-item {
+    display: flex;
+    gap: 20px;
+    padding: 22px 4px;
+    border-top: 1px solid var(--border);
+    border-radius: 6px;
+    transition: background 0.15s ease;
+  }
+
+  .agenda-item:hover { background: var(--white); }
+  .agenda-item:first-child { border-top: 1px solid var(--navy); }
+
+  .agenda-num {
+    font-family: 'Newsreader', serif;
+    color: var(--red);
+    font-weight: 600;
+    font-size: 15px;
+    min-width: 26px;
+    padding-top: 2px;
+  }
+
+  .agenda-item h3 { font-size: 16.5px; margin-bottom: 4px; }
+  .agenda-item p { font-size: 14.5px; color: var(--navy-soft); }
+
+  .wed-note { margin-top: 28px; font-size: 13.5px; color: var(--muted); font-style: italic; }
+
+  /* Team */
+  .team-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+  @media (min-width: 620px) {
+    .team-grid { grid-template-columns: repeat(2, 1fr); max-width: 620px; }
+  }
+
+  .team-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--navy);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+
+  .team-card .name { font-family: 'Newsreader', serif; font-size: 19px; font-weight: 600; margin-bottom: 4px; }
+
+  .team-card .role {
+    font-size: 13px;
+    color: var(--red);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Footer */
+  footer { padding: 44px 0 64px; text-align: center; }
+  footer .foot-mark { font-family: 'Newsreader', serif; font-size: 15px; color: var(--navy-soft); margin-bottom: 6px; }
+  footer .foot-sub { font-size: 12.5px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="accent-bar"></div>
+
+<header>
+  <div class="header-inner">
+    <div class="wordmark">
+      <span><span class="plus">+</span> table group</span>
+      <span class="x">×</span>
+      <span style="font-size:15px; font-weight:400; color:var(--muted);">salesforce</span>
+    </div>
+    <nav>
+      <a href="#opportunity">The opportunity</a>
+      <a href="#heard">What we heard</a>
+      <a href="#lanes">Two lanes</a>
+      <a href="#next">The unlock</a>
+      <a href="#demo">Next week</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">For Joel — ahead of next week's demo</span>
+      <h1>You know who takes the assessment. You don't always know who's about to buy again.</h1>
+      <p class="sub">Right now, that connection lives in three different places — ActiveCampaign, WordPress, and Salesforce — and none of them talk to each other. Here's how we're thinking about the gap, before we show you what it looks like connected, live, next week.</p>
+      <div class="btn-row">
+        <a href="#heard" class="btn btn-primary">See what we heard</a>
+        <a href="#demo" class="btn btn-secondary">Jump to next week's agenda</a>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat">
+          <span class="num">3</span>
+          <span class="label">Systems in play — ActiveCampaign, WordPress, Salesforce</span>
+        </div>
+        <div class="stat">
+          <span class="num">Summer</span>
+          <span class="label">Your own target to get this cleaned up</span>
+        </div>
+        <div class="stat">
+          <span class="num">0</span>
+          <span class="label">Assessment completions tracked in Salesforce today</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="opp-band" id="opportunity">
+    <div class="wrap">
+      <span class="eyebrow">The size of this</span>
+      <h2>For every buyer Salesforce sees today, about four assessment takers go unseen.</h2>
+
+      <div class="opp-compare">
+        <div class="opp-figure one">
+          <span class="n">1</span>
+          <span class="cap">Visible to Salesforce and marketing today</span>
+        </div>
+        <div class="opp-divider"></div>
+        <div class="opp-figure four">
+          <span class="n">4</span>
+          <span class="cap">Already using your product — invisible to both</span>
+        </div>
+      </div>
+
+      <p class="opp-body">That's the ratio you gave us. Today, marketing can only see and reach the 1. The other 4 have already used your product — they're just sitting in ActiveCampaign and WordPress instead of the system that's supposed to turn them into your next sale.</p>
+    </div>
+  </section>
+
+  <section class="block" id="heard">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What we heard</span>
+        <h2>Three things you told us you're trying to do</h2>
+        <p class="sub">Nothing here is new to you — this is what came out of our conversation, said back in plain terms.</p>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <span class="num-tag">01</span>
+          <h3>Map the full journey</h3>
+          <p>See who takes an assessment and who buys it, before and after the sale — in one place, instead of split across Salesforce, ActiveCampaign, and WordPress.</p>
+        </div>
+        <div class="card">
+          <span class="num-tag">02</span>
+          <h3>Make faster calls</h3>
+          <p>Get an answer in minutes instead of pulling reports together by hand across three separate systems.</p>
+        </div>
+        <div class="card">
+          <span class="num-tag">03</span>
+          <h3>Get more out of every buyer</h3>
+          <p>Turn a one-time assessment taker into a repeat buyer or a certified consultant, and know when it's time to reach back out.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="lanes">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Two lanes, one recommendation</span>
+        <h2>Why we think both should move at the same time</h2>
+        <p class="sub">There are two separate efforts on the table right now, and the instinct might be to tackle them one at a time. Here's why we don't think that's the right call.</p>
+      </div>
+
+      <div class="lanes-grid">
+        <div class="lane-card">
+          <span class="lane-tag">Lane 1</span>
+          <h3>Marketing &amp; assessment visibility</h3>
+          <p class="lane-owner">You, Alex, and Sam — this conversation</p>
+          <p class="desc">Connecting the taker → buyer → repeat-buyer path so marketing can see it and act on it.</p>
+        </div>
+        <div class="lane-card">
+          <span class="lane-tag">Lane 2</span>
+          <h3>TGC Opportunity cleanup</h3>
+          <p class="lane-owner">Allan and Ben, running separately</p>
+          <p class="desc">Fixing the data structure that ties a contact back to the opportunity they came from.</p>
+        </div>
+      </div>
+
+      <p class="lane-why"><strong>Here's the catch:</strong> Lane 2 is part of what makes Lane 1 possible. The cleaner that opportunity-to-contact structure gets, the more of the taker-to-buyer path marketing can actually see. Wait for Lane 2 to finish before starting Lane 1, and you delay the thing you actually care about. Run Lane 1 on its own without Lane 2, and it eventually hits a ceiling. Doing both at once means marketing starts showing results while the cleanup happens underneath it — and the cleanup gets a real reason pulling it forward, instead of being cleanup for its own sake.</p>
+    </div>
+  </section>
+
+  <section class="block" id="breaks">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Where it breaks today</span>
+        <h2>The path from taker to buyer, as it actually works right now</h2>
+      </div>
+      <div class="breaks-body">
+        <p>Someone takes an assessment. If they bought it themselves, Salesforce has the full picture. But most of the time, someone else bought it for them — and you don't find out who actually took it until after the fact. That information lands in ActiveCampaign or your in-house WordPress tracking. It never makes it back to the Salesforce opportunity that paid for it.</p>
+      </div>
+
+      <div class="flow">
+        <div class="flow-box">
+          <strong>Opportunity in Salesforce</strong>
+          Buyer purchases licenses
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">
+          <strong>Assessment link goes out</strong>
+          Sent to the buyer's team
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box broken">
+          <span class="q-badge">?</span>
+          <strong>Taker completes it</strong>
+          Tracked in ActiveCampaign / WordPress — not connected back
+        </div>
+      </div>
+      <p class="flow-caption">The result: you can follow up with takers in ActiveCampaign, but you can't tie that follow-up back to the deal, run real attribution, or see which of your campaigns are actually driving repeat business.</p>
+    </div>
+  </section>
+
+  <section class="block" id="next">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">The unlock</span>
+        <h2>Marketing and sales, looking at the same record</h2>
+        <p class="sub">Right now, sales owns the opportunity and marketing owns the taker — two separate views of the same customer. Connecting them is what makes everything else here possible.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">01</span>
+          <div>
+            <h3>One record, two teams</h3>
+            <p>The same account and opportunity sales is already tracking gets the assessment-taker activity added to it — so marketing and sales are looking at the same information, instead of two separate exports that never line up.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">02</span>
+          <div>
+            <h3>Follow-up that runs itself</h3>
+            <p>Segment by taker, first-time buyer, repeat buyer, or certified consultant, and let the follow-up go out automatically instead of rebuilding those lists every time — no extra hands needed on a small team.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">03</span>
+          <div>
+            <h3>Know what's actually working</h3>
+            <p>Tie a specific campaign, ad, or email back to an assessment completion or a repeat purchase — so marketing can show sales, in the same system, which efforts are actually contributing to pipeline.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="note-aside">This is Lane 1 from above. Lane 2 — the TGC Opportunity cleanup — is what makes the "one record, two teams" piece fully possible.</p>
+    </div>
+  </section>
+
+  <section class="block" id="demo">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Next week</span>
+        <h2>What we're showing you</h2>
+        <p class="sub">This is a live look at the platform, grounded in your own numbers — not a generic pitch. We'll root it in what we heard, show you what's possible, and figure out together what's actually worth doing next.</p>
+      </div>
+
+      <div class="agenda">
+        <div class="agenda-item">
+          <span class="agenda-num">01</span>
+          <div>
+            <h3>Where things stand</h3>
+            <p>A quick recap of the goals and the gap, so we're all starting from the same page.</p>
+          </div>
+        </div>
+        <div class="agenda-item">
+          <span class="agenda-num">02</span>
+          <div>
+            <h3>A real example, live in the platform</h3>
+            <p>We'll trace one actual prospect's path — ad to email to sale — and point to exactly where the tracking breaks today.</p>
+          </div>
+        </div>
+        <div class="agenda-item">
+          <span class="agenda-num">03</span>
+          <div>
+            <h3>How the pieces connect</h3>
+            <p>Salesforce, WordPress, and ActiveCampaign, and what it takes to tie assessment-taker data back to the opportunity.</p>
+          </div>
+        </div>
+        <div class="agenda-item">
+          <span class="agenda-num">04</span>
+          <div>
+            <h3>Who you're actually talking to</h3>
+            <p>The difference between the account that bought and the person who took the assessment, and how to reach each one differently.</p>
+          </div>
+        </div>
+        <div class="agenda-item">
+          <span class="agenda-num">05</span>
+          <div>
+            <h3>Next steps</h3>
+            <p>Whatever makes sense based on what we see. Nothing's decided going in.</p>
+          </div>
+        </div>
+      </div>
+      <p class="wed-note">No pricing, no commitments — just a live look at what's possible.</p>
+    </div>
+  </section>
+
+  <section class="block" id="team" style="border-bottom: none;">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Who's in the room</span>
+        <h2>The two of us driving this</h2>
+      </div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="name">Alex Nguyen</div>
+          <div class="role">Account Director</div>
+        </div>
+        <div class="team-card">
+          <div class="name">Sam Flemmer</div>
+          <div class="role">Digital Marketing Specialist</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="foot-mark">Table Group × Salesforce</div>
+  <div class="foot-sub">Prepared July 2026</div>
+</footer>
+
+</body>
+</html>
